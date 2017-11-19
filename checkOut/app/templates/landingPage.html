@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Final Bill</title>
+</head>
+<body>
+<h2> Final Bill </h2>
+{% set count = 0 %}
+<table>
+		{%for val in lstOfItemsproductCode%}
+        <tr><td>
+            <div>  {{ val  }}</div></td>
+            <td><div>  {{ lstOfItemsproductPrice[count]   }}</div></td>
+        </tr>
+    {%set count = count + 1 %}
+		{%endfor%}
+    </table>
+<p>Link to go back to add Items: <a href="{{url_for('addItem')}}">Click here!</a></p>
+</body>
+</html>
