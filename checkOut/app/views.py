@@ -37,15 +37,15 @@ def addItem():
         if(button_value == 'add'):
             if allItemsAdded is None:
                 allItemsAdded = []
-            allItemsAdded.append(itemName)
+            if(DBConnect.checkItemExists(itemName)):
+                allItemsAdded.append(itemName)
+                print("Here what the fuck exists :'(")
+            else:
+                return "Sorry, Item cannot be added as it does not exist in our catalog. Please Enter the product code as mentioned in the catalof to swiftly add the item to your basket!"
 
         elif(button_value == 'delete'):
             ## check DB catalog and delete
             allItemsAdded.remove(itemName)
-            ## delete here
-            #itm = Item.getItem(itemName)
-            #print(itm.productName)
-            #trans.deleteItem(itm)
 
         productcur = DBConnect.getAllProduct()
         data = list(productcur)
@@ -64,8 +64,11 @@ def all_items_trans():
     trans = Transaction.Transaction()
     trans.addItem(allItemsAdded)
     trans.addBOGOItems()
+    trans.addPriceDropFeatureItems('AP1','AP1',3,1.50,'APPL')
+    ## have to avoid stacking up here,  also as part of test check if the discount items present or not and how it behaves
+    trans.addPriceDropFeatureItems('OM1', 'AP1',1, 3.0, 'APOM')
     trans.addCHMKItems()
     lstOfItemsproductCode, lstOfItemsproductName, lstOfItemsproductPrice = trans.getListOfItems()
-    return render_template('landingPage.html', lstOfItemsproductCode = lstOfItemsproductCode, lstOfItemsproductName= lstOfItemsproductName, lstOfItemsproductPrice = lstOfItemsproductPrice)
+    return render_template('landingPage.html', lstOfItemsproductCode = lstOfItemsproductCode, lstOfItemsproductName= lstOfItemsproductName, lstOfItemsproductPrice = lstOfItemsproductPrice, totalPrice = trans.getTotalPrice())
 
 

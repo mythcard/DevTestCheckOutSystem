@@ -17,12 +17,12 @@ class Item:
 class Transaction:
     lstItm = None
     dict1 = dict()
-    size = 0
+    totalPrice = 0
 
     def __init__(self):
         self.lstItm = []
         dict1 = dict()
-        size = 0
+        totalPrice = 0
 
 
 
@@ -35,7 +35,7 @@ class Transaction:
             productPrice = productPrice[0]['productPrice']
             itm = Item(productCode, productName, productPrice)
             self.lstItm.append(itm)
-            self.size += 1
+            self.totalPrice += productPrice
             if productCode in self.dict1:
                 self.dict1[productCode] += 1
             else:
@@ -101,7 +101,7 @@ class Transaction:
         while(limit > 0):
             itm = Item('BOGO', 'BOGO', -11.23)
             self.lstItm.append(itm)
-            self.size += 1
+            self.totalPrice  = self.totalPrice -11.23
             if itm.productName in self.dict1:
                 self.dict1[itm.productName] += 1
             else:
@@ -114,12 +114,29 @@ class Transaction:
         while (limit > 0):
             itm = Item('CHMK', 'CHMK', -4.75)
             self.lstItm.append(itm)
-            self.size += 1
+            self.totalPrice = self.totalPrice - 4.75
             if itm.productName in self.dict1:
                 self.dict1[itm.productName] += 1
             else:
                 self.dict1[itm.productName] = 1
             limit -= 1
+
+    """for APPL and APOM, buy an item to its limit and find the price drop for all the items in its discount purview"""
+    def addPriceDropFeatureItems(self, productCode, priceDropProductCode,  checkLimit, priceDrop, discountCode):
+        if(self.checkLimit(productCode,checkLimit)):
+            limit = self.dict1[priceDropProductCode]
+        else:
+            limit = 0
+        while (limit > 0):
+            itm = Item(discountCode, discountCode, -priceDrop )
+            self.lstItm.append(itm)
+            self.totalPrice = self.totalPrice - priceDrop
+            if itm.productName in self.dict1:
+                self.dict1[itm.productName] += 1
+            else:
+                self.dict1[itm.productName] = 1
+            limit -= 1
+
 
     def getListOfItems(self):
         lstOfItemsproductCode = []
@@ -130,6 +147,9 @@ class Transaction:
             lstOfItemsproductName.append(itm1.productName)
             lstOfItemsproductPrice.append(itm1.productPrice)
         return lstOfItemsproductCode, lstOfItemsproductName, lstOfItemsproductPrice
+
+    def getTotalPrice(self):
+        return self.totalPrice
 
 
 

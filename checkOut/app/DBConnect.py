@@ -21,6 +21,22 @@ def buildTransactionId():
     id = transactionDetails.insert({})
     return id
 
+def checkItemExists(itemName):
+    productcatalog = mongoConnect.db.productCatalog
+    try:
+        productName = productcatalog.find({'productCode': itemName}, {'productCode': '1'})
+        productName = productName[0]['productCode']
+        #print type(productName)
+        #print type(itemName)
+        #print("Check name var and db name: ", productName, itemName)
+
+        if itemName == productName:
+            return True
+        else:
+            return False
+    except:
+        return False
+
 
 """
 def addItemToTransaction(trans):
